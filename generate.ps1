@@ -1,0 +1,1 @@
+dotnet run --project ./DayGenerator $args[0] ./AdventOfCode22 ./AdventOfCode22.Tests
