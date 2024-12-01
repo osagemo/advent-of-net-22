@@ -61,7 +61,7 @@ class Program
             stopWatch.Stop();
 
             Console.WriteLine($"{day} - Part 1: {result1} ({FormatTimeSpan(time1)})");
-            Console.WriteLine($"{day} - Part 2: {result2} ({stopWatch.Elapsed.TotalMilliseconds}ms)");
+            Console.WriteLine($"{day} - Part 2: {result2} ({FormatTimeSpan(stopWatch.Elapsed)})");
         }
         catch (Exception ex)
         {
