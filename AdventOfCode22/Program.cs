@@ -8,20 +8,31 @@ class Program
     {
         if (args.Length == 0)
         {
-            Console.WriteLine("Usage: dotnet run <day number, e.g. 1>");
+            Console.WriteLine("Usage: dotnet run <day number, e.g. 1, or 'all'>");
             return;
         }
 
-        string dayNumber = args[0].ToLower();
-        if (!int.TryParse(dayNumber, out _))
+        string dayArg = args[0].ToLower();
+
+        if (dayArg == "all")
         {
-            Console.WriteLine("Day must be a number.");
-            return;
+            RunAllDays();
         }
-        dayNumber = dayNumber.PadLeft(2, '0');
-        string day = $"Day{dayNumber}";
+        else
+        {
+            if (!int.TryParse(dayArg, out _))
+            {
+                Console.WriteLine("Day must be a number.");
+                return;
+            }
+            dayArg = dayArg.PadLeft(2, '0');
+            RunSingleDay(dayArg);
+        }
+    }
 
-        // Construct the expected namespace and class name (e.g., AdventOfCode.Day01)
+    private static void RunSingleDay(string dayNumber)
+    {
+        string day = $"Day{dayNumber}";
         string namespaceAndClass = $"{NameSpace}.{day}";
         string inputFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, day, "input.txt");
 
@@ -35,7 +46,6 @@ class Program
 
         try
         {
-            // Load the specified class dynamically
             Type? dayType = Type.GetType(namespaceAndClass);
             if (dayType == null)
             {
@@ -43,7 +53,6 @@ class Program
                 return;
             }
 
-            // Invoke Part1 and Part2 methods dynamically
             MethodInfo? part1Method = dayType.GetMethod("Part1");
             MethodInfo? part2Method = dayType.GetMethod("Part2");
 
@@ -66,6 +75,24 @@ class Program
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    private static void RunAllDays()
+    {
+        Console.WriteLine("Running all days...");
+        for (int i = 1; i <= 25; i++)
+        {
+            string dayNumber = i.ToString().PadLeft(2, '0');
+            string day = $"Day{dayNumber}";
+            string inputFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, day, "input.txt");
+
+            if (!File.Exists(inputFilePath))
+            {
+                continue;
+            }
+            Console.WriteLine($"\n--- Day {dayNumber} ---");
+            RunSingleDay(dayNumber);
         }
     }
 
